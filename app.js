@@ -191,7 +191,7 @@ function updateStats(){
   const portfolioValue = sumBy(fund.holdings, "valueUSD");
   const top = [...fund.holdings].sort((a,b) => (b.valueUSD||0)-(a.valueUSD||0))[0];
 
-  $("#statPositions").textContent = shownRows;        // number of rows currently displayed
+  $("#statPositions").textContent = shownRows;        // rows currently displayed
   $("#statValue").textContent = fmtUSD(portfolioValue);
   $("#statTop").textContent = top ? `${top.ticker} · ${fmtUSD(top.valueUSD)}` : "—";
 }
