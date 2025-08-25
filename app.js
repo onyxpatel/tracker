@@ -75,7 +75,15 @@ const FUNDS = [
 /* ---------- Small helpers ---------- */
 const $ = (sel) => document.querySelector(sel);
 const fmtInt  = (n) => (n ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 });
-const fmtUSD  = (n) => (n ?? 0).toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+const fmtUSD = (n) => {
+  if (n == null) return "$0";
+  return new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: "USD",
+    notation: "compact",     // <- shows $57.4B instead of $57,447,600,000
+    maximumFractionDigits: 1
+  }).format(n);
+}
 const sumBy   = (arr, key) => arr.reduce((a, x) => a + (+x[key] || 0), 0);
 const esc     = (s) => String(s ?? "").replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
 
