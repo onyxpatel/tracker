@@ -200,4 +200,14 @@ function escapeHTML(s) {
   return String(s ?? "").replace(/[&<>"']/g, ch => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
   }[ch]));
+// --- Sticky table header offset --------------------------------------------
+// Keeps the holdings table header aligned directly beneath the topbar on all screens.
+function setStickyOffset() {
+  const topbar = document.querySelector('.topbar');
+  const h = topbar ? topbar.offsetHeight : 60; // fallback
+  document.documentElement.style.setProperty('--sticky-offset', `${h}px`);
+}
+window.addEventListener('DOMContentLoaded', setStickyOffset);
+window.addEventListener('resize', setStickyOffset);
+
 }
