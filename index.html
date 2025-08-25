@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>13F Tracker (Simple)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>13F Tracker</h1>
+    <div class="controls">
+      <label class="sr-only" for="fundSelect">Choose fund</label>
+      <select id="fundSelect" aria-label="Choose fund"></select>
+      <input id="searchInput" type="search" placeholder="Search ticker or name…" aria-label="Search holdings" />
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="fund-meta">
+      <h2 id="fundName">—</h2>
+      <p class="muted"><span id="fundManager">—</span> • Last updated: <span id="lastUpdated">—</span></p>
+    </section>
+
+    <section class="cards">
+      <div class="card">
+        <div class="card-title">Total positions</div>
+        <div class="card-value" id="statPositions">—</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Portfolio value</div>
+        <div class="card-value" id="statValue">—</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Top holding</div>
+        <div class="card-value" id="statTop">—</div>
+      </div>
+    </section>
+
+    <section class="table-wrap">
+      <table id="holdingsTable">
+        <thead>
+          <tr>
+            <th data-col="ticker">Ticker</th>
+            <th data-col="name">Company</th>
+            <th class="num" data-col="shares">Shares</th>
+            <th class="num" data-col="valueUSD">Value (USD)</th>
+            <th data-col="sector">Sector</th>
+          </tr>
+        </thead>
+        <tbody id="holdingsBody">
+          <!-- rows injected by app.js -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="footer muted">
+    <small>Manual updates each quarter. Edit <code>FUNDS</code> in <code>app.js</code>. URL hash supports deep links, e.g. <code>#scion</code>.</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
