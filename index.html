@@ -3,28 +3,33 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>13F Tracker (Simple)</title>
+  <title>13F Tracker — Top 4 Holdings</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="topbar">
-    <h1>13F Tracker</h1>
-    <div class="controls">
+  <header class="topbar" role="banner">
+    <h1 class="app-title">13F Tracker</h1>
+    <div class="controls" role="group" aria-label="Controls">
       <label class="sr-only" for="fundSelect">Choose fund</label>
       <select id="fundSelect" aria-label="Choose fund"></select>
+
+      <label class="sr-only" for="searchInput">Search holdings</label>
       <input id="searchInput" type="search" placeholder="Search ticker or name…" aria-label="Search holdings" />
     </div>
   </header>
 
-  <main class="container">
+  <main class="container" role="main">
     <section class="fund-meta">
       <h2 id="fundName">—</h2>
-      <p class="muted"><span id="fundManager">—</span> • Last updated: <span id="lastUpdated">—</span></p>
+      <p class="muted">
+        <span id="fundManager">—</span>
+        • Last updated: <span id="lastUpdated">—</span>
+      </p>
     </section>
 
-    <section class="cards">
+    <section class="cards" aria-label="Key stats">
       <div class="card">
-        <div class="card-title">Total positions</div>
+        <div class="card-title">Positions shown</div>
         <div class="card-value" id="statPositions">—</div>
       </div>
       <div class="card">
@@ -37,15 +42,15 @@
       </div>
     </section>
 
-    <section class="table-wrap">
+    <section class="table-wrap" aria-label="Holdings table">
       <table id="holdingsTable">
         <thead>
           <tr>
-            <th data-col="ticker">Ticker</th>
-            <th data-col="name">Company</th>
-            <th class="num" data-col="shares">Shares</th>
-            <th class="num" data-col="valueUSD">Value (USD)</th>
-            <th data-col="sector">Sector</th>
+            <th data-col="ticker" scope="col">Ticker</th>
+            <th data-col="name" scope="col">Company</th>
+            <th class="num" data-col="shares" scope="col">Shares</th>
+            <th class="num" data-col="valueUSD" scope="col">Value (USD)</th>
+            <th data-col="sector" scope="col">Sector</th>
           </tr>
         </thead>
         <tbody id="holdingsBody">
@@ -56,7 +61,11 @@
   </main>
 
   <footer class="footer muted">
-    <small>Manual updates each quarter. Edit <code>FUNDS</code> in <code>app.js</code>. URL hash supports deep links, e.g. <code>#scion</code>.</small>
+    <small>
+      Edit <code>FUNDS</code> in <code>app.js</code>. This view shows the
+      <strong>top 4</strong> holdings (by Value) per fund. While searching, it shows all matches.
+      Deep link with <code>#fundId</code> (e.g., <code>#berkshire</code>).
+    </small>
   </footer>
 
   <script src="app.js"></script>
