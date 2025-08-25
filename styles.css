@@ -67,6 +67,8 @@ select:focus, input[type="search"]:focus{
 .card-value{ font-size: 1.35rem; font-weight: 700; margin-top: .25rem; }
 
 /* ---------- Table ---------- */
+/* The table's scrollport adds padding-top equal to the topbar height,
+   so the sticky header never covers the first data row. */
 .table-wrap{
   background: var(--panel);
   border: 1px solid var(--border);
@@ -74,15 +76,20 @@ select:focus, input[type="search"]:focus{
   overflow: auto;                      /* vertical + horizontal scroll on small screens */
   -webkit-overflow-scrolling: touch;
   max-width: 100%;
+  padding-top: var(--sticky-offset);   /* key: keeps first row below sticky thead */
 }
+
 table{
   width: 100%;
   border-collapse: collapse;
   min-width: 640px;                    /* allow sideways scroll on tiny phones */
 }
+
 thead{ position: relative; z-index: 3; }
 thead th{
-  position: sticky; top: var(--sticky-offset); z-index: 2;
+  position: sticky;
+  top: 0;                              /* stick to top of the .table-wrap scrollport */
+  z-index: 2;
   text-align: left;
   padding: .75rem 1rem;
   font-size: .85rem; color: var(--muted); letter-spacing: .2px;
@@ -91,6 +98,7 @@ thead th{
   cursor: pointer;
   box-shadow: 0 1px 0 var(--border);
 }
+
 tbody td{
   padding: .8rem 1rem;
   border-top: 1px solid var(--border);
