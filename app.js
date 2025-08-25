@@ -1,4 +1,13 @@
-// ====== Editable data (update this by hand each quarter) =====================
+/* =========================================================================
+   13F Tracker — Minimal, Mobile‑friendly, Top‑4 view
+   -------------------------------------------------------------------------
+   How to update numbers each quarter:
+   - Edit the FUNDS array below. Keep exactly 4 holdings per fund for this view.
+   - 'valueUSD' and 'shares' are plain numbers (no commas). UI formats them.
+   - Update 'lastUpdated' to your quarter end (e.g., "2025-06-30").
+   ========================================================================= */
+
+// ===== Editable Data ========================================================
 const FUNDS = [
   {
     id: "berkshire",
@@ -9,36 +18,33 @@ const FUNDS = [
       { ticker: "AAPL", name: "Apple Inc.", shares: 280000000, valueUSD: 57447600000, sector: "Technology" },
       { ticker: "AXP",  name: "American Express", shares: 151610700, valueUSD: 48360780000, sector: "Financials" },
       { ticker: "BAC",  name: "Bank of America", shares: 605267375, valueUSD: 28641251000, sector: "Financials" },
-      { ticker: "KO",   name: "Coca-Cola", shares: 400000000, valueUSD: 28300000000, sector: "Consumer Staples" }
+      { ticker: "KO",   name: "Coca‑Cola", shares: 400000000, valueUSD: 28300000000, sector: "Consumer Staples" }
     ]
   },
-
   {
     id: "scion",
     name: "Scion Asset Management",
     manager: "Michael Burry",
     lastUpdated: "2025-06-30",
     holdings: [
-      { ticker: "UNH",  name: "UnitedHealth (CALLS)", shares: 350000, valueUSD: 109189500, sector: "Options" },
-      { ticker: "REGN", name: "Regeneron (CALLS)", shares: 200000, valueUSD: 105000000, sector: "Options" },
-      { ticker: "LULU", name: "Lululemon (Equity)", shares: 0, valueUSD: 0, sector: "Consumer Discretionary" },
-      { ticker: "BRKR", name: "Bruker (Equity)", shares: 0, valueUSD: 0, sector: "Healthcare" }
+      { ticker: "EL",   name: "Estée Lauder", shares: 150000, valueUSD: 12120000, sector: "Consumer Discretionary" },
+      { ticker: "LULU", name: "Lululemon Athletica", shares: 50000, valueUSD: 11879000, sector: "Consumer Discretionary" },
+      { ticker: "BRKR", name: "Bruker Corp", shares: 250000, valueUSD: 10300000, sector: "Healthcare" },
+      { ticker: "REGN", name: "Regeneron Pharmaceuticals", shares: 15000, valueUSD: 7875000, sector: "Healthcare" }
     ]
   },
-
   {
     id: "tiger",
     name: "Tiger Global Management",
     manager: "Chase Coleman",
     lastUpdated: "2025-06-30",
     holdings: [
-      { ticker: "AMZN", name: "Amazon.com", shares: 10000000, valueUSD: 2340000000, sector: "Consumer Discretionary" },
-      { ticker: "META", name: "Meta Platforms", shares: 0, valueUSD: 0, sector: "Technology" },
-      { ticker: "MSFT", name: "Microsoft", shares: 0, valueUSD: 0, sector: "Technology" },
-      { ticker: "SE",   name: "Sea Ltd (ADR)", shares: 0, valueUSD: 0, sector: "Consumer/Tech" }
+      { ticker: "AMZN", name: "Amazon.com", shares: 10685541, valueUSD: 2344301000, sector: "Consumer Discretionary" },
+      { ticker: "META", name: "Meta Platforms", shares: 7533525, valueUSD: 5560419000, sector: "Technology" },
+      { ticker: "MSFT", name: "Microsoft", shares: 6551368, valueUSD: 3258716000, sector: "Technology" },
+      { ticker: "SE",   name: "Sea Ltd (ADR)", shares: 16041335, valueUSD: 2565651000, sector: "Consumer/Tech" }
     ]
   },
-
   {
     id: "soros",
     name: "Soros Fund Management",
@@ -51,7 +57,6 @@ const FUNDS = [
       { ticker: "TSLA", name: "Tesla Inc.", shares: 0, valueUSD: 0, sector: "Consumer Discretionary" }
     ]
   },
-
   {
     id: "bridgewater",
     name: "Bridgewater Associates",
@@ -65,41 +70,45 @@ const FUNDS = [
     ]
   }
 ];
+// ============================================================================
 
+/* ---------- Small helpers ---------- */
+const $ = (sel) => document.querySelector(sel);
+const fmtInt  = (n) => (n ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 });
+const fmtUSD  = (n) => (n ?? 0).toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+const sumBy   = (arr, key) => arr.reduce((a, x) => a + (+x[key] || 0), 0);
+const esc     = (s) => String(s ?? "").replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
 
-// =============================================================================
-
-// ---------- Utilities ----------
-const $ = sel => document.querySelector(sel);
-const formatInt = n => (n ?? 0).toLocaleString(undefined, { maximumFractionDigits: 0 });
-const formatUSD = n => (n ?? 0).toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-const sumBy = (arr, key) => arr.reduce((a, x) => a + (+x[key] || 0), 0);
-
-// ---------- State ----------
+/* ---------- State ---------- */
 let currentFundId = null;
 let searchTerm = "";
 let sort = { col: "valueUSD", dir: "desc" };
 
-// ---------- Init ----------
+/* ---------- Init ---------- */
 window.addEventListener("DOMContentLoaded", () => {
   populateFundSelect();
-  // Pick from hash or default to first fund
+
+  // Pick fund from hash or default to first
   const fromHash = (location.hash || "").slice(1);
   const initial = FUNDS.find(f => f.id === fromHash)?.id || FUNDS[0]?.id;
   setFund(initial);
-  bindEvents();
-});
 
-function populateFundSelect() {
+  bindEvents();
+  setStickyOffset();  // compute header offset for sticky thead
+});
+window.addEventListener("resize", setStickyOffset);
+
+function populateFundSelect(){
   const sel = $("#fundSelect");
-  sel.innerHTML = FUNDS.map(f => `<option value="${f.id}">${f.name}</option>`).join("");
+  sel.innerHTML = FUNDS.map(f => `<option value="${f.id}">${esc(f.name)}</option>`).join("");
 }
 
-function bindEvents() {
-  $("#fundSelect").addEventListener("change", e => setFund(e.target.value));
-  $("#searchInput").addEventListener("input", e => {
+function bindEvents(){
+  $("#fundSelect").addEventListener("change", (e) => setFund(e.target.value));
+  $("#searchInput").addEventListener("input", (e) => {
     searchTerm = e.target.value.trim().toLowerCase();
     renderTable();
+    updateStats();
   });
 
   // Sort on header click
@@ -107,19 +116,16 @@ function bindEvents() {
     th.addEventListener("click", () => {
       const col = th.getAttribute("data-col");
       if (!col) return;
-      if (sort.col === col) {
-        sort.dir = sort.dir === "asc" ? "desc" : "asc";
-      } else {
-        sort.col = col;
-        sort.dir = col === "name" || col === "ticker" || col === "sector" ? "asc" : "desc";
-      }
+      sort = (sort.col === col)
+        ? { col, dir: sort.dir === "asc" ? "desc" : "asc" }
+        : { col, dir: ["name","ticker","sector"].includes(col) ? "asc" : "desc" };
       renderTable();
       updateSortIndicators();
     });
   });
 }
 
-function setFund(id) {
+function setFund(id){
   currentFundId = id;
   $("#fundSelect").value = id;
   location.hash = "#" + id;
@@ -127,87 +133,82 @@ function setFund(id) {
   const fund = FUNDS.find(f => f.id === id);
   if (!fund) return;
 
-  // Meta
   $("#fundName").textContent = fund.name;
   $("#fundManager").textContent = fund.manager;
   $("#lastUpdated").textContent = fund.lastUpdated;
 
-  // Stats
-  const totalPositions = fund.holdings.length;
-  const portfolioValue = sumBy(fund.holdings, "valueUSD");
-  const top = [...fund.holdings].sort((a,b) => (b.valueUSD||0)-(a.valueUSD||0))[0];
-
-  $("#statPositions").textContent = formatInt(totalPositions);
-  $("#statValue").textContent = formatUSD(portfolioValue);
-  $("#statTop").textContent = top ? `${top.ticker} · ${formatUSD(top.valueUSD)}` : "—";
-
-  // Reset search on fund switch
   $("#searchInput").value = "";
   searchTerm = "";
 
-  // Render table
   renderTable();
   updateSortIndicators();
+  updateStats();
 }
 
-function updateSortIndicators() {
-  document.querySelectorAll("#holdingsTable thead th").forEach(th => {
-    th.classList.remove("sort-asc", "sort-desc");
-    const col = th.getAttribute("data-col");
-    if (col === sort.col) th.classList.add(sort.dir === "asc" ? "sort-asc" : "sort-desc");
-  });
-}
-
-function renderTable() {
+function renderTable(){
   const fund = FUNDS.find(f => f.id === currentFundId);
   if (!fund) return;
 
-  let rows = fund.holdings;
-
   // Filter
-  if (searchTerm) {
+  let rows = fund.holdings;
+  if (searchTerm){
     rows = rows.filter(h =>
       (h.ticker || "").toLowerCase().includes(searchTerm) ||
-      (h.name || "").toLowerCase().includes(searchTerm)
+      (h.name   || "").toLowerCase().includes(searchTerm)
     );
   }
 
   // Sort
   const dir = sort.dir === "asc" ? 1 : -1;
-  rows = [...rows].sort((a, b) => {
+  rows = [...rows].sort((a,b) => {
     const ca = a[sort.col], cb = b[sort.col];
-    if (sort.col === "name" || sort.col === "ticker" || sort.col === "sector") {
-      return String(ca || "").localeCompare(String(cb || "")) * dir;
+    if (["name","ticker","sector"].includes(sort.col)){
+      return String(ca||"").localeCompare(String(cb||"")) * dir;
     }
-    return ((+ca || 0) - (+cb || 0)) * dir;
+    return ((+ca||0) - (+cb||0)) * dir;
   });
 
+  // Show exactly Top 4 when NOT searching; show all matches when searching
+  if (!searchTerm) rows = rows.slice(0, 4);
+
   // Paint
-  const tbody = $("#holdingsBody");
-  tbody.innerHTML = rows.map(h => `
+  $("#holdingsBody").innerHTML = rows.map(h => `
     <tr>
-      <td>${escapeHTML(h.ticker)}</td>
-      <td>${escapeHTML(h.name)}</td>
-      <td class="num">${formatInt(h.shares)}</td>
-      <td class="num">${formatUSD(h.valueUSD)}</td>
-      <td>${escapeHTML(h.sector)}</td>
+      <td>${esc(h.ticker)}</td>
+      <td>${esc(h.name)}</td>
+      <td class="num">${fmtInt(h.shares)}</td>
+      <td class="num">${fmtUSD(h.valueUSD)}</td>
+      <td>${esc(h.sector)}</td>
     </tr>
   `).join("");
 }
 
-// Minimal sanitizer for table content
-function escapeHTML(s) {
-  return String(s ?? "").replace(/[&<>"']/g, ch => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
-  }[ch]));
-// --- Sticky table header offset --------------------------------------------
-// Keeps the holdings table header aligned directly beneath the topbar on all screens.
-function setStickyOffset() {
-  const topbar = document.querySelector('.topbar');
-  const h = topbar ? topbar.offsetHeight : 60; // fallback
-  document.documentElement.style.setProperty('--sticky-offset', `${h}px`);
-}
-window.addEventListener('DOMContentLoaded', setStickyOffset);
-window.addEventListener('resize', setStickyOffset);
+function updateStats(){
+  const fund = FUNDS.find(f => f.id === currentFundId);
+  if (!fund) return;
 
+  const shownRows = $("#holdingsBody").children.length;
+  const portfolioValue = sumBy(fund.holdings, "valueUSD");
+  const top = [...fund.holdings].sort((a,b) => (b.valueUSD||0)-(a.valueUSD||0))[0];
+
+  $("#statPositions").textContent = shownRows;        // number of rows currently displayed
+  $("#statValue").textContent = fmtUSD(portfolioValue);
+  $("#statTop").textContent = top ? `${top.ticker} · ${fmtUSD(top.valueUSD)}` : "—";
+}
+
+function updateSortIndicators(){
+  document.querySelectorAll("#holdingsTable thead th").forEach(th => {
+    th.classList.remove("sort-asc","sort-desc");
+    const col = th.getAttribute("data-col");
+    if (col === sort.col){
+      th.classList.add(sort.dir === "asc" ? "sort-asc" : "sort-desc");
+    }
+  });
+}
+
+/* ---------- Sticky header offset (matches real topbar height) ---------- */
+function setStickyOffset(){
+  const topbar = document.querySelector(".topbar");
+  const h = topbar ? topbar.offsetHeight : 60; // px
+  document.documentElement.style.setProperty("--sticky-offset", `${h}px`);
 }
