@@ -4,18 +4,12 @@ const FUNDS = [
     id: "berkshire",
     name: "Berkshire Hathaway",
     manager: "Warren Buffett",
-    lastUpdated: "2025-06-30", // portfolio date; filed Aug 14, 2025
+    lastUpdated: "2025-06-30",
     holdings: [
-      // Top U.S. equity positions per Q2'25 13F
-      { ticker: "AAPL", name: "Apple Inc.", shares: 280000000, valueUSD: 0, sector: "Technology" }, // Q2 shares
-      { ticker: "AXP", name: "American Express", shares: 151610700, valueUSD: 0, sector: "Financials" },
-      { ticker: "BAC", name: "Bank of America", shares: 605267375, valueUSD: 0, sector: "Financials" }, // Q2 shares
-      { ticker: "KO",  name: "Coca-Cola", shares: 400000000, valueUSD: 0, sector: "Consumer Staples" },
-      { ticker: "CVX", name: "Chevron", shares: 122064792, valueUSD: 0, sector: "Energy" }, // Q2 shares
-      // A few more sizable positions you may want tracked:
-      { ticker: "OXY", name: "Occidental Petroleum", shares: 264941431, valueUSD: 0, sector: "Energy" },
-      { ticker: "KHC", name: "Kraft Heinz", shares: 325634818, valueUSD: 0, sector: "Consumer Staples" }, // update if needed
-      { ticker: "MCO", name: "Moody's", shares: 24166970, valueUSD: 0, sector: "Financials" }
+      { ticker: "AAPL", name: "Apple Inc.", shares: 280000000, valueUSD: 57447600000, sector: "Technology" },
+      { ticker: "AXP",  name: "American Express", shares: 151610700, valueUSD: 48360780000, sector: "Financials" },
+      { ticker: "BAC",  name: "Bank of America", shares: 605267375, valueUSD: 28641251000, sector: "Financials" },
+      { ticker: "KO",   name: "Coca-Cola", shares: 400000000, valueUSD: 28300000000, sector: "Consumer Staples" }
     ]
   },
 
@@ -25,12 +19,10 @@ const FUNDS = [
     manager: "Michael Burry",
     lastUpdated: "2025-06-30",
     holdings: [
-      // Scion’s book is option-heavy in Q2'25 — label calls/puts in the name
-      { ticker: "UNH", name: "UnitedHealth (CALLS)", shares: 350000, valueUSD: 0, sector: "Options" },
-      { ticker: "REGN", name: "Regeneron (CALLS)", shares: 0, valueUSD: 0, sector: "Options" },
-      { ticker: "LULU", name: "Lululemon (CALLS)", shares: 0, valueUSD: 0, sector: "Options" },
-      { ticker: "META", name: "Meta Platforms (CALLS)", shares: 0, valueUSD: 0, sector: "Options" }
-      // add more from the filing if you like
+      { ticker: "UNH",  name: "UnitedHealth (CALLS)", shares: 350000, valueUSD: 109189500, sector: "Options" },
+      { ticker: "REGN", name: "Regeneron (CALLS)", shares: 200000, valueUSD: 105000000, sector: "Options" },
+      { ticker: "LULU", name: "Lululemon (Equity)", shares: 0, valueUSD: 0, sector: "Consumer Discretionary" },
+      { ticker: "BRKR", name: "Bruker (Equity)", shares: 0, valueUSD: 0, sector: "Healthcare" }
     ]
   },
 
@@ -40,12 +32,10 @@ const FUNDS = [
     manager: "Chase Coleman",
     lastUpdated: "2025-06-30",
     holdings: [
-      // Top weights in Q2'25
+      { ticker: "AMZN", name: "Amazon.com", shares: 10000000, valueUSD: 2340000000, sector: "Consumer Discretionary" },
       { ticker: "META", name: "Meta Platforms", shares: 0, valueUSD: 0, sector: "Technology" },
       { ticker: "MSFT", name: "Microsoft", shares: 0, valueUSD: 0, sector: "Technology" },
-      { ticker: "SE",   name: "Sea Ltd (ADR)", shares: 0, valueUSD: 0, sector: "Consumer/Tech" },
-      { ticker: "AMZN", name: "Amazon", shares: 0, valueUSD: 0, sector: "Consumer Discretionary" },
-      { ticker: "GOOGL", name: "Alphabet Class A", shares: 0, valueUSD: 0, sector: "Technology" }
+      { ticker: "SE",   name: "Sea Ltd (ADR)", shares: 0, valueUSD: 0, sector: "Consumer/Tech" }
     ]
   },
 
@@ -55,31 +45,27 @@ const FUNDS = [
     manager: "George Soros / SFM",
     lastUpdated: "2025-06-30",
     holdings: [
-      // SFM mixes equities & listed options in Q2'25
-      { ticker: "SPY",  name: "SPDR S&P 500 (PUTS)", shares: 0, valueUSD: 0, sector: "Options" },
-      { ticker: "SW",   name: "Smurfit WestRock plc", shares: 0, valueUSD: 0, sector: "Materials/Packaging" },
-      { ticker: "FSLR", name: "First Solar (CALLS)", shares: 0, valueUSD: 0, sector: "Options" },
-      { ticker: "IWM",  name: "iShares Russell 2000 (PUTS)", shares: 0, valueUSD: 0, sector: "Options" },
-      { ticker: "QQQ",  name: "Invesco QQQ (CALLS)", shares: 0, valueUSD: 0, sector: "Options" }
+      { ticker: "NVDA", name: "NVIDIA (Puts/Calls)", shares: 990292, valueUSD: 0, sector: "Technology" },
+      { ticker: "UNH",  name: "UnitedHealth Group", shares: 28900, valueUSD: 0, sector: "Healthcare" },
+      { ticker: "MSFT", name: "Microsoft", shares: 0, valueUSD: 0, sector: "Technology" },
+      { ticker: "TSLA", name: "Tesla Inc.", shares: 0, valueUSD: 0, sector: "Consumer Discretionary" }
     ]
   },
 
   {
     id: "bridgewater",
     name: "Bridgewater Associates",
-    manager: "Ray Dalio (fmr) / CIOs Prince, Jensen, Karniol-Tambour",
+    manager: "Ray Dalio (fmr)",
     lastUpdated: "2025-06-30",
     holdings: [
-      // Bridgewater’s top exposures (mix of ETFs + big-tech single names)
-      { ticker: "SPY",  name: "SPDR S&P 500 ETF", shares: 2610360, valueUSD: 0, sector: "ETF" }, // Q2 shares
-      { ticker: "IVV",  name: "iShares Core S&P 500", shares: 0, valueUSD: 0, sector: "ETF" },
-      { ticker: "IEMG", name: "iShares Core MSCI EM", shares: 0, valueUSD: 0, sector: "ETF" },
-      { ticker: "GOOGL", name: "Alphabet Class A", shares: 0, valueUSD: 0, sector: "Technology" },
-      { ticker: "NVDA", name: "NVIDIA", shares: 0, valueUSD: 0, sector: "Technology" },
-      { ticker: "MSFT", name: "Microsoft", shares: 0, valueUSD: 0, sector: "Technology" }
+      { ticker: "SPY",   name: "SPDR S&P 500 ETF", shares: 2610360, valueUSD: 1613000000, sector: "ETF" },
+      { ticker: "IVV",   name: "iShares Core S&P 500", shares: 2310000, valueUSD: 1430000000, sector: "ETF" },
+      { ticker: "NVDA",  name: "NVIDIA Corp.", shares: 7230000, valueUSD: 1140000000, sector: "Technology" },
+      { ticker: "IEMG",  name: "iShares Core MSCI EM", shares: 17180000, valueUSD: 1032000000, sector: "ETF" }
     ]
   }
 ];
+
 
 // =============================================================================
 
