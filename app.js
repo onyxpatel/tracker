@@ -4,54 +4,83 @@ const FUNDS = [
     id: "berkshire",
     name: "Berkshire Hathaway",
     manager: "Warren Buffett",
-    lastUpdated: "2025-06-30",
+    lastUpdated: "2025-06-30", // portfolio date; filed Aug 14, 2025
     holdings: [
-      { ticker: "AAPL", name: "Apple Inc.", shares: 790000000, valueUSD: 150000000000, sector: "Technology" },
-      { ticker: "KO",   name: "Coca‑Cola Co.", shares: 400000000, valueUSD: 24000000000,  sector: "Consumer Staples" },
-      { ticker: "AXP",  name: "American Express", shares: 150000000, valueUSD: 32000000000, sector: "Financials" }
+      // Top U.S. equity positions per Q2'25 13F
+      { ticker: "AAPL", name: "Apple Inc.", shares: 280000000, valueUSD: 0, sector: "Technology" }, // Q2 shares
+      { ticker: "AXP", name: "American Express", shares: 151610700, valueUSD: 0, sector: "Financials" },
+      { ticker: "BAC", name: "Bank of America", shares: 605267375, valueUSD: 0, sector: "Financials" }, // Q2 shares
+      { ticker: "KO",  name: "Coca-Cola", shares: 400000000, valueUSD: 0, sector: "Consumer Staples" },
+      { ticker: "CVX", name: "Chevron", shares: 122064792, valueUSD: 0, sector: "Energy" }, // Q2 shares
+      // A few more sizable positions you may want tracked:
+      { ticker: "OXY", name: "Occidental Petroleum", shares: 264941431, valueUSD: 0, sector: "Energy" },
+      { ticker: "KHC", name: "Kraft Heinz", shares: 325634818, valueUSD: 0, sector: "Consumer Staples" }, // update if needed
+      { ticker: "MCO", name: "Moody's", shares: 24166970, valueUSD: 0, sector: "Financials" }
     ]
   },
+
   {
     id: "scion",
     name: "Scion Asset Management",
     manager: "Michael Burry",
     lastUpdated: "2025-06-30",
     holdings: [
-      { ticker: "GOOGL", name: "Alphabet Class A", shares: 1200000, valueUSD: 210000000, sector: "Communication Services" },
-      { ticker: "BABA",  name: "Alibaba Group", shares: 900000, valueUSD: 72000000, sector: "Consumer Discretionary" }
+      // Scion’s book is option-heavy in Q2'25 — label calls/puts in the name
+      { ticker: "UNH", name: "UnitedHealth (CALLS)", shares: 350000, valueUSD: 0, sector: "Options" },
+      { ticker: "REGN", name: "Regeneron (CALLS)", shares: 0, valueUSD: 0, sector: "Options" },
+      { ticker: "LULU", name: "Lululemon (CALLS)", shares: 0, valueUSD: 0, sector: "Options" },
+      { ticker: "META", name: "Meta Platforms (CALLS)", shares: 0, valueUSD: 0, sector: "Options" }
+      // add more from the filing if you like
     ]
   },
+
   {
     id: "tiger",
     name: "Tiger Global Management",
     manager: "Chase Coleman",
     lastUpdated: "2025-06-30",
     holdings: [
-      { ticker: "META", name: "Meta Platforms", shares: 2800000, valueUSD: 1350000000, sector: "Communication Services" },
-      { ticker: "AMZN", name: "Amazon.com", shares: 3500000, valueUSD: 650000000, sector: "Consumer Discretionary" }
+      // Top weights in Q2'25
+      { ticker: "META", name: "Meta Platforms", shares: 0, valueUSD: 0, sector: "Technology" },
+      { ticker: "MSFT", name: "Microsoft", shares: 0, valueUSD: 0, sector: "Technology" },
+      { ticker: "SE",   name: "Sea Ltd (ADR)", shares: 0, valueUSD: 0, sector: "Consumer/Tech" },
+      { ticker: "AMZN", name: "Amazon", shares: 0, valueUSD: 0, sector: "Consumer Discretionary" },
+      { ticker: "GOOGL", name: "Alphabet Class A", shares: 0, valueUSD: 0, sector: "Technology" }
     ]
   },
+
   {
     id: "soros",
     name: "Soros Fund Management",
-    manager: "George Soros",
+    manager: "George Soros / SFM",
     lastUpdated: "2025-06-30",
     holdings: [
-      { ticker: "SPY",  name: "SPDR S&P 500 ETF", shares: 2000000, valueUSD: 1000000000, sector: "ETF" },
-      { ticker: "NVDA", name: "NVIDIA Corp.", shares: 500000, valueUSD: 600000000, sector: "Technology" }
+      // SFM mixes equities & listed options in Q2'25
+      { ticker: "SPY",  name: "SPDR S&P 500 (PUTS)", shares: 0, valueUSD: 0, sector: "Options" },
+      { ticker: "SW",   name: "Smurfit WestRock plc", shares: 0, valueUSD: 0, sector: "Materials/Packaging" },
+      { ticker: "FSLR", name: "First Solar (CALLS)", shares: 0, valueUSD: 0, sector: "Options" },
+      { ticker: "IWM",  name: "iShares Russell 2000 (PUTS)", shares: 0, valueUSD: 0, sector: "Options" },
+      { ticker: "QQQ",  name: "Invesco QQQ (CALLS)", shares: 0, valueUSD: 0, sector: "Options" }
     ]
   },
+
   {
-    id: "arkk",
-    name: "ARK Innovation ETF (sample)",
-    manager: "Cathie Wood",
+    id: "bridgewater",
+    name: "Bridgewater Associates",
+    manager: "Ray Dalio (fmr) / CIOs Prince, Jensen, Karniol-Tambour",
     lastUpdated: "2025-06-30",
     holdings: [
-      { ticker: "TSLA", name: "Tesla Inc.", shares: 2000000, valueUSD: 500000000, sector: "Consumer Discretionary" },
-      { ticker: "ROKU", name: "Roku Inc.", shares: 3000000, valueUSD: 210000000, sector: "Communication Services" }
+      // Bridgewater’s top exposures (mix of ETFs + big-tech single names)
+      { ticker: "SPY",  name: "SPDR S&P 500 ETF", shares: 2610360, valueUSD: 0, sector: "ETF" }, // Q2 shares
+      { ticker: "IVV",  name: "iShares Core S&P 500", shares: 0, valueUSD: 0, sector: "ETF" },
+      { ticker: "IEMG", name: "iShares Core MSCI EM", shares: 0, valueUSD: 0, sector: "ETF" },
+      { ticker: "GOOGL", name: "Alphabet Class A", shares: 0, valueUSD: 0, sector: "Technology" },
+      { ticker: "NVDA", name: "NVIDIA", shares: 0, valueUSD: 0, sector: "Technology" },
+      { ticker: "MSFT", name: "Microsoft", shares: 0, valueUSD: 0, sector: "Technology" }
     ]
   }
 ];
+
 // =============================================================================
 
 // ---------- Utilities ----------
